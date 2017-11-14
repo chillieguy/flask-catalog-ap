@@ -1,1 +1,1 @@
-# flask-catalog-ap
+# flask-catalog-app
