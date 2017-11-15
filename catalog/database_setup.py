@@ -14,11 +14,11 @@ class User(Base):
     email = Column(String(250), nullable=False)
     picture = Column(String(250))
 
-class Catalog(Base):
-    __tablename__ = 'catalog'
+class Catagory(Base):
+    __tablename__ = 'catagory'
 
     id = Column(Integer, primary_key=True)
-    category = Column(String(250), nullable=False)
+    name = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
@@ -36,8 +36,8 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     description = Column(String(250), nullable=False)
-    catalog_id = Column(Integer, ForeignKey('catalog.id'))
-    catalog = relationship(Catalog)
+    catagory_id = Column(Integer, ForeignKey('catagory.id'))
+    catagory = relationship(Catagory)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
