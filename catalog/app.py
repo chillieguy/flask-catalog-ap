@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, redirect, jsonify, url_for, f
 
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem, User
+from database_setup import Base, User, Catagory, Item
 
 
 # Create the app
@@ -25,7 +25,8 @@ session = DBSession()
 
 @app.route('/')
 def index():
-  return "Hello World"
+    catagories = session.query(Catagory).all()
+    return render_template('index.html', catagories=catagories)
 
 
 if __name__ == '__main__':
