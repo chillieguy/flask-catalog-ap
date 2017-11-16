@@ -14,6 +14,7 @@ user1 = User(name="Chuck Underwood", email="chillieguy@gmail.com")
 session.add(user1)
 session.commit()
 
+print("Added User...")
 
 # Catalog catagories
 
@@ -58,3 +59,17 @@ session.add(cat10)
 session.commit()
 
 print("Added Catalog Catagories...")
+
+item1 = Item(name="Soccer Ball", description="This is my soccer ball..", catagory_id=1 ,user_id=1)
+session.add(item1)
+session.commit()
+
+item2 = Item(name="Kids Soccer Ball", description="A ball that is just right for your kids...", catagory_id=1 ,user_id=1)
+session.add(item2)
+session.commit()
+
+item3 = Item(name="Mega Putter", description="This putter is guaranteed to sink your ball...", catagory_id=8 ,user_id=1)
+session.add(item3)
+session.commit()
+
+print("Added Item items...")
