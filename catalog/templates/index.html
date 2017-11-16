@@ -11,5 +11,10 @@
     {{ catagory.name }}
     <br>
   {% endfor %}
+  <h1>Newest 10 Items</h1>
+  {% for item in items | reverse %}
+    {{ item.name }} ({{ item.catagory.name }})
+    <br>
+  {% endfor %}
 </body>
 </html>
