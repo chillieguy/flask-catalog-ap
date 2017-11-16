@@ -26,8 +26,26 @@ session = DBSession()
 @app.route('/')
 def index():
     catagories = session.query(Catagory).all()
-    return render_template('index.html', catagories=catagories)
+    items = session.query(Item).order_by(Item.updated_at).limit(10).all()
+    return render_template('index.html', catagories=catagories, items=items)
 
+@app.route('/additem/', methods=['GET', 'POST'])
+def additem():
+    catagories = session.query(Catagory).all()
+
+    if request.method == "POST":
+        if request.form['item']:
+            if request.form['description']:
+                if request.form['catagory']:
+                    name = request.form['item']
+                    description = request.form['description']
+                    catagory_id = int(request.form['catagory'])
+                    
+                    new_item = Item(name=name, description=description, catagory_id=catagory_id)
+                    session.add(new_item)
+                    session.commit()
+
+    return render_template('additem.html', catagories=catagories)
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
