@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Catalog | Add Item</title>
+</head>
+<body>
+  <h1>Add Item</h1>
+  <form action="{{ url_for('additem') }}" method="post">
+    <p>New Item:</p>
+    <input type="text" name="item" size="30" placeholder="Item name..." required>
+    <br>
+    <textarea name="description" id="description" cols="30" rows="10" placeholder="Item description..." required></textarea>
+    <br>
+    <select name="catagory" id="catagory">
+      {% for catagory in catagories %}
+        <option value="{{ catagory.id }}">{{ catagory.name }}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" value="Create">
+  </form>
+</body>
+</html>
