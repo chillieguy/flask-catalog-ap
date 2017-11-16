@@ -44,8 +44,31 @@ def additem():
                     new_item = Item(name=name, description=description, catagory_id=catagory_id)
                     session.add(new_item)
                     session.commit()
+        return redirect(url_for('index'))
 
     return render_template('additem.html', catagories=catagories)
+
+@app.route('/edititem/<int:item_id>/', methods=['GET', 'POST'])
+def edititem(item_id):
+    item = session.query(Item).filter_by(id=item_id).one()
+    catagories = session.query(Catagory).all()
+
+    if request.method == "POST":
+        if request.form['item']:
+            if request.form['description']:
+                if request.form['catagory']:
+                    name = request.form['item']
+                    description = request.form['description']
+                    catagory_id = int(request.form['catagory'])
+
+                    edit_item = session.query(Item).filter_by(id=item_id).one()
+                    edit_item.name = name
+                    edit_item.description = description
+                    edit_item.catagory_id = catagory_id
+                    session.commit()
+        return redirect(url_for('index'))
+
+    return render_template('edititem.html', item=item, catagories=catagories)
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
