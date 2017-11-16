@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Catalog | Edit Item</title>
+</head>
+<body>
+  <h1>Edit Item</h1>
+  <form action="{{ url_for('edititem', item_id=item.id) }}" method="post">
+    <input type="text" value="{{ item.name }}" name="item" size="30" placeholder="Item name..." required>
+    <br>
+    <textarea name="description" id="description" cols="30" rows="10" required>
+      {{ item.description }}
+    </textarea>
+    <br>
+    <select name="catagory" id="catagory">
+      {% for catagory in catagories %}
+        <option value="{{ catagory.id }}" {% if item.catagory_id == catagory.id %} selected {% endif %}>
+          {{ catagory.name }}
+        </option>
+      {% endfor %}
+    </select>
+    <input type="submit" value="Update">
+  </form>
+  <br>
+  <a href="{{ url_for('index') }}">Cancel</a>
+</body>
+</html>
