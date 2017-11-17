@@ -86,6 +86,20 @@ def edit_item(item_id):
 
     return render_template('edititem.html', item=item, catagories=catagories)
 
+@app.route('/catalog/deleteitem/<int:item_id>/', methods=['GET', 'POST'])
+def delete_item(item_id):
+    item = session.query(Item).filter_by(id=item_id).one()
+    catagory = session.query(Catagory).filter_by(id=item.catagory_id).one()
+
+    if request.method == "POST":
+        item = session.query(Item).filter_by(id=item_id).one()
+        session.delete(item)
+        session.commit()
+
+        return redirect(url_for('index'))
+
+    return render_template('deleteitem.html', item=item, catagory=catagory)
+
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
