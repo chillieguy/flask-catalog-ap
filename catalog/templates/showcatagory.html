@@ -9,7 +9,7 @@
 <body>
   <h1>{{ catagory.name }} Items ({{ items.count() }} items</h1>
   {% for item in items %}
-    {{ item.name }}
+    <a href="{{ url_for('show_item', catagory_id=catagory.id, item_id=item.id) }}">{{ item.name }}</a>
     <br>
   {% endfor %}
 </body>
