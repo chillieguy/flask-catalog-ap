@@ -37,6 +37,13 @@ def show_catagory(catagory_id):
 
     return render_template('showcatagory.html', catagory=catagory, items=items)
 
+@app.route('/catalog/<int:catagory_id>/<int:item_id>/')
+def show_item(catagory_id, item_id):
+    catagory = session.query(Catagory).filter_by(id=catagory_id).one()
+    item = session.query(Item).filter_by(id=item_id).one()
+
+    return render_template('showitem.html', catagory=catagory, item=item)
+
 @app.route('/catalog/additem/', methods=['GET', 'POST'])
 def add_item():
     catagories = session.query(Catagory).all()
