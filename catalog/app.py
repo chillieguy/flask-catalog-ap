@@ -29,8 +29,16 @@ def index():
     items = session.query(Item).order_by(Item.updated_at).limit(10).all()
     return render_template('index.html', catagories=catagories, items=items)
 
-@app.route('/additem/', methods=['GET', 'POST'])
-def additem():
+
+@app.route('/catalog/<int:catagory_id>/')
+def show_catagory(catagory_id):
+    catagory = session.query(Catagory).filter_by(id=catagory_id).one()
+    items = session.query(Item).filter_by(catagory_id=catagory.id)
+
+    return render_template('showcatagory.html', catagory=catagory, items=items)
+
+@app.route('/catalog/additem/', methods=['GET', 'POST'])
+def add_item():
     catagories = session.query(Catagory).all()
 
     if request.method == "POST":
@@ -48,8 +56,9 @@ def additem():
 
     return render_template('additem.html', catagories=catagories)
 
-@app.route('/edititem/<int:item_id>/', methods=['GET', 'POST'])
-def edititem(item_id):
+
+@app.route('/catalog/edititem/<int:item_id>/', methods=['GET', 'POST'])
+def edit_item(item_id):
     item = session.query(Item).filter_by(id=item_id).one()
     catagories = session.query(Catagory).all()
 
