@@ -8,12 +8,12 @@
 <body>
   <h1>Catagories</h1>
   {% for catagory in catagories %}
-    {{ catagory.name }}
+    <a href="{{url_for('show_catagory', catagory_id=catagory.id)}}">{{ catagory.name }}</a>
     <br>
   {% endfor %}
   <h1>Newest 10 Items</h1>
   {% for item in items | reverse %}
-    {{ item.name }} ({{ item.catagory.name }})
+    {{ item.name }} ({{ item.catagory.name }}) {{ item.catagory.id }}
     <br>
   {% endfor %}
 </body>
