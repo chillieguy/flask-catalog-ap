@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Catalog | {{ catagory.name }}</title>
+</head>
+<body>
+  <h1>{{ catagory.name }} Items ({{ items.count() }} items</h1>
+  {% for item in items %}
+    {{ item.name }}
+    <br>
+  {% endfor %}
+</body>
+</html>
