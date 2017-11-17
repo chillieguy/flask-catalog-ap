@@ -24,6 +24,7 @@ session = DBSession()
 # Routes
 
 @app.route('/')
+@app.route('/catalog/')
 def index():
     catagories = session.query(Catagory).all()
     items = session.query(Item).order_by(Item.updated_at).limit(10).all()
@@ -99,6 +100,37 @@ def delete_item(item_id):
         return redirect(url_for('index'))
 
     return render_template('deleteitem.html', item=item, catagory=catagory)
+
+# JSON endpoints
+
+@app.route('/catalog/JSON')
+@app.route('/catalog/json')
+@app.route('/catalog/catalog.json')
+def catalogJSON():
+    items = session.query(Item).all()
+
+    return jsonify(Item=[item.serialize for item in items])
+
+@app.route('/catalog/catagory/JSON')
+@app.route('/catalog/catagory/json')
+def catagoriesJSON():
+    catagories = session.query(Catagory)
+
+    return jsonify(Catagory=[catagory.serialize for catagory in catagories])
+
+@app.route('/catalog/catagory/<int:catagory_id>/JSON')
+@app.route('/catalog/catagory/<int:catagory_id>/json')
+def catagoryJSON(catagory_id):
+    items = session.query(Item).filter_by(catagory_id=catagory_id)
+
+    return jsonify(Item=[item.serialize for item in items])
+
+@app.route('/catalog/item/<int:item_id>/JSON')
+@app.route('/catalog/item/<int:item_id>/json')
+def itemJSON(item_id):
+    item = session.query(Item).filter_by(id=item_id).one()
+
+    return jsonify(Item=item.serialize)
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
