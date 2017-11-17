@@ -72,4 +72,24 @@ item3 = Item(name="Mega Putter", description="This putter is guaranteed to sink 
 session.add(item3)
 session.commit()
 
+item4 = Item(name="Glow in the Dark Balls", description="Balls that glow in the dark...", catagory_id=8 ,user_id=1)
+session.add(item4)
+session.commit()
+
+item5 = Item(name="Cleats", description="Cleats that allow you to run...", catagory_id=9 ,user_id=1)
+session.add(item5)
+session.commit()
+
+item6 = Item(name="Snowboarding Poles", description="Are these even a thing...", catagory_id=5 ,user_id=1)
+session.add(item6)
+session.commit()
+
+item7 = Item(name="Basball Cap", description="Authentic baseball cap worm by the pros...", catagory_id=3 ,user_id=1)
+session.add(item7)
+session.commit()
+
+item8 = Item(name="Pro Baseball Cap", description="Cheap imitation baseball cap...", catagory_id=3 ,user_id=1)
+session.add(item8)
+session.commit()
+
 print("Added Item items...")
