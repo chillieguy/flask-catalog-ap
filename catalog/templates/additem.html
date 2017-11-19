@@ -1,25 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Catalog | Add Item</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
   <h1>Add Item</h1>
-  <form action="{{ url_for('add_item') }}" method="post">
+  <form action="{{ url_for('add_item') }}" method="post" class="form-group">
     <p>New Item:</p>
-    <input type="text" name="item" size="30" placeholder="Item name..." required>
+    <input type="text" name="item" size="30" placeholder="Item name..." class="form-control" required>
     <br>
-    <textarea name="description" id="description" cols="30" rows="10" placeholder="Item description..." required></textarea>
+    <textarea name="description" id="description" cols="30" rows="10" placeholder="Item description..." class="form-control" required></textarea>
     <br>
-    <select name="catagory" id="catagory">
+    <select name="catagory" class="form-control mb-3" id="catagory">
       {% for catagory in catagories %}
         <option value="{{ catagory.id }}">{{ catagory.name }}</option>
       {% endfor %}
     </select>
-    <input type="submit" value="Create">
+    <input type="submit" class="btn btn-primary" value="Create">
   </form>
-</body>
-</html>
+{% endblock %}

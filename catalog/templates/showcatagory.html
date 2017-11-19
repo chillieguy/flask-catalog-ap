@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Catalog | {{ catagory.name }}</title>
-</head>
-<body>
-  <h1>{{ catagory.name }} Items ({{ items.count() }} items</h1>
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ catagory.name }} ({{ items.count() }} items)</h1>
   {% for item in items %}
-    <a href="{{ url_for('show_item', catagory_id=catagory.id, item_id=item.id) }}">{{ item.name }}</a>
-    <br>
+    <div class="mb-2">
+      <a class="bold" href="{{ url_for('show_item', catagory_id=catagory.id, item_id=item.id) }}">{{ item.name }}</a>
+    </div>
   {% endfor %}
-</body>
-</html>
+{% endblock %}
