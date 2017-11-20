@@ -31,16 +31,17 @@ def index():
     return render_template('index.html', catagories=catagories, items=items)
 
 
-@app.route('/catalog/<int:catagory_id>/')
-def show_catagory(catagory_id):
-    catagory = session.query(Catagory).filter_by(id=catagory_id).one()
+# @app.route('/catalog/<int:catagory_id>/')
+@app.route('/catalog/<string:catagory_name>/')
+def show_catagory(catagory_name):
+    catagory = session.query(Catagory).filter_by(name=catagory_name).first()
     items = session.query(Item).filter_by(catagory_id=catagory.id)
 
     return render_template('showcatagory.html', catagory=catagory, items=items)
 
-@app.route('/catalog/<int:catagory_id>/<int:item_id>/')
-def show_item(catagory_id, item_id):
-    catagory = session.query(Catagory).filter_by(id=catagory_id).one()
+@app.route('/catalog/<string:catagory_name>/<int:item_id>/')
+def show_item(catagory_name, item_id):
+    catagory = session.query(Catagory).filter_by(name=catagory_name).first()
     item = session.query(Item).filter_by(id=item_id).one()
 
     return render_template('showitem.html', catagory=catagory, item=item)
@@ -120,8 +121,16 @@ def catagoriesJSON():
 
 @app.route('/catalog/catagory/<int:catagory_id>/JSON')
 @app.route('/catalog/catagory/<int:catagory_id>/json')
-def catagoryJSON(catagory_id):
+def catagoryJSONid(catagory_id):
     items = session.query(Item).filter_by(catagory_id=catagory_id)
+
+    return jsonify(Item=[item.serialize for item in items])
+
+@app.route('/catalog/catagory/<string:catagory_name>/JSON')
+@app.route('/catalog/catagory/<string:catagory_name>/json')
+def catagoryJSONstring(catagory_name):
+    catagory = session.query(Catagory).filter_by(name=catagory_name).first()
+    items = session.query(Item).filter_by(catagory_id=catagory.id)
 
     return jsonify(Item=[item.serialize for item in items])
 

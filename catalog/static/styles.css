@@ -1,3 +1,8 @@
+html, body {
+  background-color: #FCF5EB;
+}
+
+
 .no-bullet {
   list-style: none;
 }

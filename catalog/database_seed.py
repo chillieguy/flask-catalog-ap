@@ -38,7 +38,7 @@ cat5 = Catagory(name="Snowboarding", user_id=1)
 session.add(cat5)
 session.commit()
 
-cat6 = Catagory(name="Soccer", user_id=1)
+cat6 = Catagory(name="Rugy", user_id=1)
 session.add(cat6)
 session.commit()
 
