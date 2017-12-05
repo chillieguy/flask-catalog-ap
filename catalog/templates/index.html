@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 
-<h1>Catagories</h1>
-
 {% block content %}
   <div class="row">
   <div class="col-md-3">
-  <ul class="list-group">
-    {% for catagory in catagories %}
-      <li class="list-group-item list-group-item-action">
-        <a href="{{url_for('show_catagory', catagory_name=catagory.name)}}">{{ catagory.name }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+    <h1>Catagories</h1>
+    <ul class="list-group">
+      {% for catagory in catagories %}
+        <li class="list-group-item list-group-item-action">
+          <a href="{{url_for('show_catagory', catagory_name=catagory.name)}}">{{ catagory.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
   </div>
   <div class="col-md-9">
-  <h1>Newest 10 Items</h1>
-  <ul class="list-unstyled">
-    {% for item in items | reverse %}
-      <li class="">
-        <a href="{{ url_for('show_item', catagory_name=item.catagory.name, item_id=item.id) }}">{{ item.name }}</a> ({{ item.catagory.name }})
-      </li>
-    {% endfor %}
-  </ul>
+    <h1>Newest 10 Items</h1>
+    <ul class="list-unstyled">
+      {% for item in items | reverse %}
+        <li class="">
+          <a href="{{ url_for('show_item', catagory_name=item.catagory.name, item_id=item.id) }}">{{ item.name }}</a> ({{ item.catagory.name }})
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 </div>
-</div>
+
 {% endblock %}
