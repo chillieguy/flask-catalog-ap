@@ -6,3 +6,8 @@ html, body {
 .no-bullet {
   list-style: none;
 }
+
+.profile-pic {
+  max-width: 35px;
+  max-height: 35px;
+}
