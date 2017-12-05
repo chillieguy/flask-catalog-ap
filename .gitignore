@@ -5,3 +5,4 @@
 .vscode
 .vagrant/
 catalog.db
+client_secret.json
