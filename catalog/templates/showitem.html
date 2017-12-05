@@ -11,6 +11,11 @@
       <br>
       <a class="btn btn-primary" href="{{ url_for('edit_item', item_id=item.id) }}">Edit</a>
       <a class="btn btn-danger"href="{{ url_for('delete_item', item_id=item.id) }}">Delete</a>
+      <div>
+        <small>
+          Created by: {{ item.user.name }}
+        </small>
+      </div>
     </div>
   </div>
 {% endblock %}
