@@ -1,7 +1,7 @@
 # Flask imports
 
 from flask import Flask, render_template, request, redirect, jsonify
-from flsk import url_for, flash
+from flask import url_for, flash
 
 # Database imports
 
@@ -100,9 +100,7 @@ def add_item():
     catagories = session.query(Catagory).all()
 
     if request.method == "POST":
-        if request.form['item']
-        and request.form['description']
-        and request.form['catagory']:
+        if request.form['item'] and request.form['description'] and request.form['catagory']:  # noqa
             name = request.form['item']
             description = request.form['description']
             catagory_id = int(request.form['catagory'])
@@ -140,9 +138,7 @@ def edit_item(item_id):
         return render_template('showitem.html', item=item, catagory=catagory)
 
     if request.method == "POST":
-        if request.form['item']
-        and request.form['description']
-        and request.form['catagory']:
+        if request.form['item'] and request.form['description'] and request.form['catagory']:  # noqa
             name = request.form['item']
             description = request.form['description']
             catagory_id = int(request.form['catagory'])
