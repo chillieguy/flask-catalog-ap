@@ -39,6 +39,9 @@ session = DBSession()
 
 # DECORATOR - Require login to access specified pages
 def login_required(f):
+    '''
+    Force login to access routes or send to login page
+    '''
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in login_session:
@@ -53,6 +56,9 @@ def login_required(f):
 @app.route('/')
 @app.route('/catalog/')
 def index():
+    '''
+    Display home page of website
+    '''
     catagories = session.query(Catagory).all()
     items = session.query(Item).order_by(Item.updated_at).limit(10).all()
     return render_template('index.html', catagories=catagories, items=items)
@@ -61,6 +67,9 @@ def index():
 # @app.route('/catalog/<int:catagory_id>/')
 @app.route('/catalog/<string:catagory_name>/')
 def show_catagory(catagory_name):
+    '''
+    Show page that lists all items in catagory
+    '''
     catagory = session.query(Catagory).filter_by(name=catagory_name).first()
     items = session.query(Item).filter_by(catagory_id=catagory.id)
 
@@ -68,6 +77,9 @@ def show_catagory(catagory_name):
 
 @app.route('/catalog/<string:catagory_name>/<int:item_id>/')
 def show_item(catagory_name, item_id):
+    '''
+    Show page that list details on specified item
+    '''
     catagory = session.query(Catagory).filter_by(name=catagory_name).first()
     item = session.query(Item).filter_by(id=item_id).one()
 
@@ -76,20 +88,29 @@ def show_item(catagory_name, item_id):
 @app.route('/catalog/additem/', methods=['GET', 'POST'])
 @login_required
 def add_item():
+    '''
+    GET - Display page to add item
+    POST - Submit page form and save to database
+    '''
     catagories = session.query(Catagory).all()
 
     if request.method == "POST":
-        if request.form['item']:
-            if request.form['description']:
-                if request.form['catagory']:
-                    name = request.form['item']
-                    description = request.form['description']
-                    catagory_id = int(request.form['catagory'])
-                    user_id = login_session['user_id']
-                    
-                    new_item = Item(name=name, description=description, catagory_id=catagory_id, user_id=user_id)
-                    session.add(new_item)
-                    session.commit()
+        if request.form['item'] and request.form['description'] and request.form['catagory']:
+            name = request.form['item']
+            description = request.form['description']
+            catagory_id = int(request.form['catagory'])
+            user_id = login_session['user_id']
+
+            new_item = Item(name=name,
+                            description=description,
+                            catagory_id=catagory_id,
+                            user_id=user_id)
+            session.add(new_item)
+            session.commit()
+        else:
+            flash("Please complete all fields in form.", "warning")
+            return render_template('additem.html', catagories=catagories)
+
         flash("Item created!", 'success')
         return redirect(url_for('index'))
 
@@ -99,6 +120,10 @@ def add_item():
 @app.route('/catalog/edititem/<int:item_id>/', methods=['GET', 'POST'])
 @login_required
 def edit_item(item_id):
+    '''
+    GET - Display page with item info to be modified
+    POST - Submit page form and save to database
+    '''
     item = session.query(Item).filter_by(id=item_id).one()
     catagories = session.query(Catagory).all()
     catagory = session.query(Catagory).filter_by(id=item.catagory_id).one()
@@ -108,18 +133,20 @@ def edit_item(item_id):
         return render_template('showitem.html', item=item, catagory=catagory)
 
     if request.method == "POST":
-        if request.form['item']:
-            if request.form['description']:
-                if request.form['catagory']:
-                    name = request.form['item']
-                    description = request.form['description']
-                    catagory_id = int(request.form['catagory'])
+        if request.form['item'] and request.form['description'] and request.form['catagory']:
+            name = request.form['item']
+            description = request.form['description']
+            catagory_id = int(request.form['catagory'])
 
-                    edit_item = session.query(Item).filter_by(id=item_id).one()
-                    edit_item.name = name
-                    edit_item.description = description
-                    edit_item.catagory_id = catagory_id
-                    session.commit()
+            edit_item = session.query(Item).filter_by(id=item_id).one()
+            edit_item.name = name
+            edit_item.description = description
+            edit_item.catagory_id = catagory_id
+            session.commit()
+        else:
+            flash("Please complete all fields in form.", "warning")
+            return render_template('additem.html', catagories=catagories)
+
         flash("Item updated!", 'success')
         return redirect(url_for('index'))
 
@@ -128,6 +155,10 @@ def edit_item(item_id):
 @app.route('/catalog/deleteitem/<int:item_id>/', methods=['GET', 'POST'])
 @login_required
 def delete_item(item_id):
+    '''
+    GET - Display confirmation page for item deletion
+    POST - Submit page and remove item from database
+    '''
     item = session.query(Item).filter_by(id=item_id).one()
     catagory = session.query(Catagory).filter_by(id=item.catagory_id).one()
 
@@ -150,6 +181,9 @@ def delete_item(item_id):
 @app.route('/catalog/json')
 @app.route('/catalog/catalog.json')
 def catalogJSON():
+    '''
+    Return all items in json format
+    '''
     items = session.query(Item).all()
 
     return jsonify(Item=[item.serialize for item in items])
@@ -157,6 +191,9 @@ def catalogJSON():
 @app.route('/catalog/catagory/JSON')
 @app.route('/catalog/catagory/json')
 def catagoriesJSON():
+    '''
+    Return all catagories in json format
+    '''
     catagories = session.query(Catagory)
 
     return jsonify(Catagory=[catagory.serialize for catagory in catagories])
@@ -164,6 +201,9 @@ def catagoriesJSON():
 @app.route('/catalog/catagory/<int:catagory_id>/JSON')
 @app.route('/catalog/catagory/<int:catagory_id>/json')
 def catagoryJSONid(catagory_id):
+    '''
+    Return all items in catagory from provided catagory id
+    '''
     items = session.query(Item).filter_by(catagory_id=catagory_id)
 
     return jsonify(Item=[item.serialize for item in items])
@@ -171,6 +211,9 @@ def catagoryJSONid(catagory_id):
 @app.route('/catalog/catagory/<string:catagory_name>/JSON')
 @app.route('/catalog/catagory/<string:catagory_name>/json')
 def catagoryJSONstring(catagory_name):
+    '''
+    Return all items in catagory from provided catagory name
+    '''
     catagory = session.query(Catagory).filter_by(name=catagory_name).first()
     items = session.query(Item).filter_by(catagory_id=catagory.id)
 
@@ -179,6 +222,9 @@ def catagoryJSONstring(catagory_name):
 @app.route('/catalog/item/<int:item_id>/JSON')
 @app.route('/catalog/item/<int:item_id>/json')
 def itemJSON(item_id):
+    '''
+    Return item details from provided item id
+    '''
     item = session.query(Item).filter_by(id=item_id).one()
 
     return jsonify(Item=item.serialize)
@@ -186,6 +232,9 @@ def itemJSON(item_id):
 # Anti-forgery state token
 @app.route('/login/')
 def showLogin():
+    '''
+    Display login page
+    '''
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -193,6 +242,9 @@ def showLogin():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    '''
+    Connect to Google OAUTH
+    '''
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -271,16 +323,16 @@ def gconnect():
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' Logging In!</h1>'
     flash("Logged in as %s" % login_session['username'], 'success')
     print("done!")
     return output
 
 @app.route('/gdisconnect')
 def gdisconnect():
+    '''
+    Disconnect from Google OAUTH
+    '''
     access_token = login_session.get('access_token')
     if access_token is None:
         print('Access Token is None')
@@ -311,6 +363,9 @@ def gdisconnect():
 # User helper functions
 
 def createUser(login_session):
+    '''
+    Add new user to database
+    '''
     newUser = User(name=login_session['username'],
                    email=login_session['email'],
                    picture=login_session['picture'])
@@ -321,11 +376,17 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
+    '''
+    Return user info from provided user id
+    '''
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
+    '''
+    Return user id from provided email
+    '''
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
