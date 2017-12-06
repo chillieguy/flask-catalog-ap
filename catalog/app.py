@@ -1,6 +1,7 @@
 # Flask imports
 
-from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
+from flask import Flask, render_template, request, redirect, jsonify
+from flsk import url_for, flash
 
 # Database imports
 
@@ -11,7 +12,8 @@ from database_setup import Base, User, Catagory, Item
 # Login, Authorization and Anti-forgery imports
 
 from flask import session as login_session
-import random, string
+import random
+import string
 
 # Google OAuth
 
@@ -27,7 +29,7 @@ from functools import wraps
 
 app = Flask(__name__)
 
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']  # noqa
 APPLICATION_NAME = "Chillie's Sports Catalog"
 
 # Connect to Database and create database session
@@ -36,6 +38,7 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
 
 # DECORATOR - Require login to access specified pages
 def login_required(f):
@@ -75,6 +78,7 @@ def show_catagory(catagory_name):
 
     return render_template('showcatagory.html', catagory=catagory, items=items)
 
+
 @app.route('/catalog/<string:catagory_name>/<int:item_id>/')
 def show_item(catagory_name, item_id):
     '''
@@ -84,6 +88,7 @@ def show_item(catagory_name, item_id):
     item = session.query(Item).filter_by(id=item_id).one()
 
     return render_template('showitem.html', catagory=catagory, item=item)
+
 
 @app.route('/catalog/additem/', methods=['GET', 'POST'])
 @login_required
@@ -95,7 +100,9 @@ def add_item():
     catagories = session.query(Catagory).all()
 
     if request.method == "POST":
-        if request.form['item'] and request.form['description'] and request.form['catagory']:
+        if request.form['item']
+        and request.form['description']
+        and request.form['catagory']:
             name = request.form['item']
             description = request.form['description']
             catagory_id = int(request.form['catagory'])
@@ -133,7 +140,9 @@ def edit_item(item_id):
         return render_template('showitem.html', item=item, catagory=catagory)
 
     if request.method == "POST":
-        if request.form['item'] and request.form['description'] and request.form['catagory']:
+        if request.form['item']
+        and request.form['description']
+        and request.form['catagory']:
             name = request.form['item']
             description = request.form['description']
             catagory_id = int(request.form['catagory'])
@@ -151,6 +160,7 @@ def edit_item(item_id):
         return redirect(url_for('index'))
 
     return render_template('edititem.html', item=item, catagories=catagories)
+
 
 @app.route('/catalog/deleteitem/<int:item_id>/', methods=['GET', 'POST'])
 @login_required
@@ -175,6 +185,7 @@ def delete_item(item_id):
 
     return render_template('deleteitem.html', item=item, catagory=catagory)
 
+
 # JSON endpoints
 
 @app.route('/catalog/JSON')
@@ -188,6 +199,7 @@ def catalogJSON():
 
     return jsonify(Item=[item.serialize for item in items])
 
+
 @app.route('/catalog/catagory/JSON')
 @app.route('/catalog/catagory/json')
 def catagoriesJSON():
@@ -198,6 +210,7 @@ def catagoriesJSON():
 
     return jsonify(Catagory=[catagory.serialize for catagory in catagories])
 
+
 @app.route('/catalog/catagory/<int:catagory_id>/JSON')
 @app.route('/catalog/catagory/<int:catagory_id>/json')
 def catagoryJSONid(catagory_id):
@@ -207,6 +220,7 @@ def catagoryJSONid(catagory_id):
     items = session.query(Item).filter_by(catagory_id=catagory_id)
 
     return jsonify(Item=[item.serialize for item in items])
+
 
 @app.route('/catalog/catagory/<string:catagory_name>/JSON')
 @app.route('/catalog/catagory/<string:catagory_name>/json')
@@ -219,6 +233,7 @@ def catagoryJSONstring(catagory_name):
 
     return jsonify(Item=[item.serialize for item in items])
 
+
 @app.route('/catalog/item/<int:item_id>/JSON')
 @app.route('/catalog/item/<int:item_id>/json')
 def itemJSON(item_id):
@@ -228,6 +243,7 @@ def itemJSON(item_id):
     item = session.query(Item).filter_by(id=item_id).one()
 
     return jsonify(Item=item.serialize)
+
 
 # Anti-forgery state token
 @app.route('/login/')
@@ -239,6 +255,7 @@ def showLogin():
                     for x in xrange(32))
     login_session['state'] = state
     return render_template("login.html", STATE=state)
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -295,8 +312,7 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(json.dumps('Current user is already connected.'), 200)  # noqa
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -328,6 +344,7 @@ def gconnect():
     print("done!")
     return output
 
+
 @app.route('/gdisconnect')
 def gdisconnect():
     '''
@@ -336,13 +353,13 @@ def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
         print('Access Token is None')
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(json.dumps('Current user not connected'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     print('In gdisconnect access token is %s', access_token)
     print('User name is: ')
     print(login_session['username'])
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']  # noqa
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print('result is ')
@@ -359,6 +376,7 @@ def gdisconnect():
     else:
         flash("Failed to logout!", 'danger')
         return redirect(url_for('index'))
+
 
 # User helper functions
 
