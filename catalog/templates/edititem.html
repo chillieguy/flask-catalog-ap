@@ -15,7 +15,7 @@
       {% endfor %}
     </select>
     <input type="submit" value="Update" class="btn btn-primary">
-    <button class="btn btn-danger" href="{{ url_for('index') }}">Cancel</button>
+    <a href="{{ url_for('show_item', catagory_name=item.catagory.name, item_id=item.id) }}" class="btn btn-danger">Cancel</a>
   </form>
   
 {% endblock %}
